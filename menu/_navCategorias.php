@@ -1,14 +1,16 @@
+<div class="menu">
+    
+    <div class="endereco">
+                <a href="">Endereço</a>
+    </div>
 <div class="navCat">
     <ul>
         <li>
-            <a href="">Endereço</a>
-        </li>
-        <li>
-            <a href="">Categorias</a>
+            <a href="">Categorias ▼</a>
             <ul>
                 <li><a href="">Veículos</a></li>
                 <li><a href="">Supermercado</a></li>
-                <li><a href="">Tecnologia</a>
+                <li><a href="">Tecnologia ▼</a>
                     <ul>
                         <li><a href="">Celulares e Telefones</a></li>
                         <li><a href="">Informática</a></li>
@@ -39,9 +41,6 @@
             <a href="">Moda</a>
         </li>
         <li>
-            <a href="">Mercado Play</a>
-        </li>
-        <li>
             <a href="">Vender</a>
         </li>
         <li>
@@ -52,7 +51,7 @@
 <div class="dados">
     <ul>
         <li>
-            <a href="">Dados User</a>
+            <a href="">Dados User ▼</a>
             <ul>
                 <li><a href="">Perfil</a></li>
                 <li><a href="">Histórico</a></li>
@@ -62,22 +61,23 @@
             <a href="">Compras</a>
         </li>
         <li>
-            <a href="">Favotiros</a>
+            <a href="">Favotiros ▼</a>
             <ul>
                 <li><a href="">Listar Favoritos</a></li>
             </ul>
         </li>
         <li>
-            <a href="">Notificações</a>
+            <a href="">Notificações ▼</a>
             <ul>
                 <li><a href="">Notificações</a></li>
             </ul>
         </li>
         <li>
-            <a href="">Carrinho</a>
+            <a href="">Carrinho ▼</a>
             <ul>
                 <li><a href="">Mostrar Carrinho</a></li>
             </ul>
         </li>
     </ul>
+</div>
 </div>

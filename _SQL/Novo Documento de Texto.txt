@@ -1,0 +1,216 @@
+CREATE DATABASE MERCADOLIVRE;
+
+USE MERCADOLIVRE;
+
+-- Creating database schema for the marketplace based on functional requirements
+-- Using INT AUTO_INCREMENT for all ID columns, compatible with MariaDB
+-- No triggers included for MariaDB compatibility
+
+-- Table: Usuarios
+CREATE TABLE Usuarios (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) NOT NULL UNIQUE,
+    Senha VARCHAR(255) NOT NULL, -- Hashed password
+    CPF_CNPJ VARCHAR(14) NOT NULL UNIQUE, -- Assuming CPF (11) or CNPJ (14) as string
+    Telefone VARCHAR(15),
+    Tipo ENUM('comprador', 'vendedor', 'ambos') NOT NULL,
+    Status ENUM('ativo', 'inativo') DEFAULT 'inativo',
+    Data_Cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table: Enderecos
+CREATE TABLE Enderecos (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Usuario_ID INT NOT NULL,
+    Logradouro VARCHAR(255) NOT NULL,
+    Numero VARCHAR(10),
+    Complemento VARCHAR(100),
+    Cidade VARCHAR(100) NOT NULL,
+    Estado VARCHAR(2) NOT NULL, -- Assuming Brazilian states (2 letters)
+    CEP VARCHAR(8) NOT NULL, -- Brazilian CEP format
+    Tipo ENUM('entrega', 'cobranca') DEFAULT 'entrega',
+    FOREIGN KEY (Usuario_ID) REFERENCES Usuarios(ID)
+);
+
+-- Table: Categorias
+CREATE TABLE Categorias (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Categoria_Pai_ID INT,
+    FOREIGN KEY (Categoria_Pai_ID) REFERENCES Categorias(ID) -- Self-referencing for hierarchy
+);
+
+-- Table: Produtos
+CREATE TABLE Produtos (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(255) NOT NULL,
+    Descricao TEXT,
+    Preco DECIMAL(10, 2) NOT NULL CHECK (Preco > 0),
+    Estoque INT NOT NULL CHECK (Estoque >= 0),
+    SKU VARCHAR(50) NOT NULL UNIQUE,
+    Vendedor_ID INT NOT NULL,
+    Categoria_ID INT NOT NULL,
+    Condicao ENUM('novo', 'usado') NOT NULL,
+    Status ENUM('ativo', 'inativo') DEFAULT 'ativo',
+    Data_Cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Peso DECIMAL(10, 2), -- For shipping calculations
+    Dimensoes VARCHAR(50), -- Format: e.g., "LxWxH cm"
+    FOREIGN KEY (Vendedor_ID) REFERENCES Usuarios(ID),
+    FOREIGN KEY (Categoria_ID) REFERENCES Categorias(ID)
+);
+
+-- Table: Imagens
+CREATE TABLE Imagens (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Produto_ID INT NOT NULL,
+    URL VARCHAR(255) NOT NULL,
+    Ordem INT DEFAULT 1,
+    FOREIGN KEY (Produto_ID) REFERENCES Produtos(ID)
+);
+
+-- Table: Carrinho
+CREATE TABLE Carrinho (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Comprador_ID INT NOT NULL,
+    Produto_ID INT NOT NULL,
+    Quantidade INT NOT NULL CHECK (Quantidade > 0),
+    Data_Adicao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Comprador_ID) REFERENCES Usuarios(ID),
+    FOREIGN KEY (Produto_ID) REFERENCES Produtos(ID)
+);
+
+-- Table: Pedidos
+CREATE TABLE Pedidos (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Comprador_ID INT NOT NULL,
+    Data_Pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Status ENUM('pendente', 'pago', 'enviado', 'entregue', 'cancelado') DEFAULT 'pendente',
+    Valor_Total DECIMAL(10, 2) NOT NULL,
+    Endereco_Entrega INT NOT NULL,
+    Metodo_Pagamento VARCHAR(50),
+    Frete_Valor DECIMAL(10, 2),
+    Codigo_Rastreio VARCHAR(50),
+    FOREIGN KEY (Comprador_ID) REFERENCES Usuarios(ID),
+    FOREIGN KEY (Endereco_Entrega) REFERENCES Enderecos(ID)
+);
+
+-- Table: Itens_Pedido
+CREATE TABLE Itens_Pedido (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Pedido_ID INT NOT NULL,
+    Produto_ID INT NOT NULL,
+    Quantidade INT NOT NULL CHECK (Quantidade > 0),
+    Preco_Unitario DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (Pedido_ID) REFERENCES Pedidos(ID),
+    FOREIGN KEY (Produto_ID) REFERENCES Produtos(ID)
+);
+
+-- Table: Pagamentos
+CREATE TABLE Pagamentos (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Pedido_ID INT NOT NULL,
+    Metodo VARCHAR(50) NOT NULL, -- e.g., 'cartao', 'boleto', 'pix'
+    Valor DECIMAL(10, 2) NOT NULL,
+    Status ENUM('pendente', 'aprovado', 'rejeitado') DEFAULT 'pendente',
+    Data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Pedido_ID) REFERENCES Pedidos(ID)
+);
+
+-- Table: Cupons
+CREATE TABLE Cupons (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Codigo VARCHAR(20) NOT NULL UNIQUE,
+    Valor DECIMAL(10, 2) NOT NULL,
+    Tipo ENUM('fixo', 'percentual') NOT NULL,
+    Validade DATE NOT NULL,
+    Status ENUM('ativo', 'inativo') DEFAULT 'ativo'
+);
+
+-- Table: Avaliacoes
+CREATE TABLE Avaliacoes (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Produto_ID INT NOT NULL,
+    Comprador_ID INT NOT NULL,
+    Nota INT NOT NULL CHECK (Nota BETWEEN 1 AND 5),
+    Comentario TEXT,
+    Data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Produto_ID) REFERENCES Produtos(ID),
+    FOREIGN KEY (Comprador_ID) REFERENCES Usuarios(ID)
+);
+
+-- Table: Buscas (optional, for search analytics)
+CREATE TABLE Buscas (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Termo VARCHAR(255) NOT NULL,
+    Comprador_ID INT,
+    Data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Comprador_ID) REFERENCES Usuarios(ID)
+);
+
+-- Table: Transportadoras
+CREATE TABLE Transportadoras (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    API_Endpoint VARCHAR(255),
+    Custos JSON -- Store cost structure if needed
+);
+
+-- Table: Fretes
+CREATE TABLE Fretes (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Pedido_ID INT NOT NULL,
+    Transportadora_ID INT NOT NULL,
+    Valor DECIMAL(10, 2) NOT NULL,
+    Prazo INT, -- Estimated delivery days
+    Codigo_Rastreio VARCHAR(50),
+    FOREIGN KEY (Pedido_ID) REFERENCES Pedidos(ID),
+    FOREIGN KEY (Transportadora_ID) REFERENCES Transportadoras(ID)
+);
+
+-- Table: Mensagens
+CREATE TABLE Mensagens (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Remetente_ID INT NOT NULL,
+    Destinatario_ID INT NOT NULL,
+    Pedido_ID INT,
+    Conteudo TEXT NOT NULL,
+    Data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Remetente_ID) REFERENCES Usuarios(ID),
+    FOREIGN KEY (Destinatario_ID) REFERENCES Usuarios(ID),
+    FOREIGN KEY (Pedido_ID) REFERENCES Pedidos(ID)
+);
+
+-- Table: Notificacoes
+CREATE TABLE Notificacoes (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Usuario_ID INT NOT NULL,
+    Tipo ENUM('email', 'push', 'sms') NOT NULL,
+    Conteudo TEXT NOT NULL,
+    Data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Usuario_ID) REFERENCES Usuarios(ID)
+);
+
+-- Table: Relatorios (optional, for report tracking)
+CREATE TABLE Relatorios (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Tipo VARCHAR(50) NOT NULL, -- e.g., 'vendas', 'produtos_populares'
+    Usuario_ID INT NOT NULL,
+    Parametros JSON, -- Store filters like period, region
+    Data_Geracao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Usuario_ID) REFERENCES Usuarios(ID)
+);
+
+-- View for aggregated sales report by seller
+CREATE VIEW Vendas_Por_Vendedor AS
+SELECT
+    u.ID AS Vendedor_ID,
+    u.Nome AS Vendedor_Nome,
+    COUNT(p.ID) AS Total_Pedidos,
+    SUM(p.Valor_Total) AS Total_Vendido
+FROM Usuarios u
+JOIN Produtos pr ON u.ID = pr.Vendedor_ID
+JOIN Itens_Pedido ip ON pr.ID = ip.Produto_ID
+JOIN Pedidos p ON ip.Pedido_ID = p.ID
+WHERE p.Status = 'entregue'
+GROUP BY u.ID, u.Nome;
