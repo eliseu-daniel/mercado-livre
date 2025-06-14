@@ -4,7 +4,7 @@
 
 .nav{
     display: flex;
-    background-color: yellow;
+    background-color: #ffe600;
     justify-content: center;
     align-content: space-between;    
 }
@@ -37,7 +37,7 @@
 
 .menu {
     display: flex;
-    background-color: yellow;
+    background-color: #ffe600;
     justify-content: space-between;
     align-items: center;
     padding-right: 80px;
@@ -116,6 +116,11 @@
 .navCat ul ul ul {
     top: 0;
     left: 100%;
+}
+
+.nav img{
+    width: 20px;
+    cursor: pointer;
 }
 
 .dados {
@@ -210,4 +215,118 @@
 
 .conteudo p{
     text-align: center;
+}
+
+#preco {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+#precoVisu{
+ font-size: 40px;
+}
+
+.baseVisu{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.Visu{
+    display: flex;
+    margin-top: 50px;
+}
+
+.Visu img{
+    height:700px ;
+    margin: 20px;
+}
+
+.dadosVisu{
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    font-size: 32px;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 300px;
+    height: 700px;
+}
+
+.dadosVisu button{
+    width: 250px;
+    height: 50px;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 6px;
+    border-color: transparent;
+    cursor: pointer;
+}
+
+.dadosVisu button[type=submit]{
+    background-color: #3483fa;
+}
+
+.dadosVisu button[type=button]{
+    background-color: rgba(65, 137, 230, .15);
+    color: #3483fa;
+}
+
+.descricaoVisu{
+    width: 60%;
+    align-items: baseline;
+}
+
+.descricaoVisu h3{
+    text-align: justify;
+    font-size: 32px;
+    padding-bottom: 20px;
+}
+
+.descricaoVisu p{
+    text-align: justify;
+    font-size: 20px;
+}
+
+.perguntas{
+    display: flex;
+    width: 60%;
+    margin-top: 50px;
+    justify-content: center;
+    align-items: center;
+}
+
+.perguntas button, input{
+    height: 50px;
+}
+
+.perguntas input{
+    width: 500px;
+}
+
+.perguntas button{
+    width: 200px;
+    height: 60px;
+    background-color: #3483fa;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 6px;
+    border-color: transparent;
+    cursor: pointer;
+}
+
+.respostas{
+    display: flex;
+    width: 60%;
+    margin-top: 50px;
+    justify-content: center;
+    font-size: 24px;
+    flex-direction: column;
+}
+
+.respostas p{
+    text-align: justify;
+    font-size: 20px;
+    margin: 15px;
 }

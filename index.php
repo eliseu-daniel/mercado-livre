@@ -15,84 +15,9 @@
         <div class="conteudo">
             <ul>
                 <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
+                    <a href="./visualização/visuProd.php?id=$id"> <img src="./img/moana2.jpg"></a>
                     <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
-                </li>
-                <li>
-                    <a href=""> <img src="./img/moana2.jpg"></a>
-                    <p>Texto</p>
+                    <p id="preco">Preço</p>
                 </li>
             </ul>
         </div>
